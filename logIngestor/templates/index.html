@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log Query Interface</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 20px;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+
+      input {
+        margin-bottom: 10px;
+        padding: 8px;
+        width: 300px;
+      }
+
+      button {
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      .log-container {
+        max-height: 200px;
+        overflow-y: scroll;
+        border: 1px solid #333;
+        padding: 10px;
+      }
+
+      .log-item {
+        margin-bottom: 5px;
+      }
+
+      .error {
+        color: #ff0000;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Log Query Interface</h1>
+
+    <section>
+      <h2>Ingest Single Log</h2>
+      <form method="post" action="/ingest">
+        <input
+          type="text"
+          id="level"
+          name="level"
+          placeholder="Level"
+          required
+        />
+        <input
+          type="text"
+          id="message"
+          name="message"
+          placeholder="Message"
+          required
+        />
+        <input
+          type="text"
+          id="resourceId"
+          name="resourceId"
+          placeholder="Resource ID"
+          required
+        />
+        <input
+          type="text"
+          id="timestamp"
+          name="timestamp"
+          placeholder="Timestamp"
+          required
+        />
+        <input
+          type="text"
+          id="traceId"
+          name="traceId"
+          placeholder="Trace ID"
+          required
+        />
+        <input
+          type="text"
+          id="spanId"
+          name="spanId"
+          placeholder="Span ID"
+          required
+        />
+        <input
+          type="text"
+          id="commit"
+          name="commit"
+          placeholder="Commit"
+          required
+        />
+        <input
+          type="text"
+          id="parentResourceId"
+          name="parentResourceId"
+          placeholder="Parent Resource ID"
+          required
+        />
+        <button type="submit">Ingest Single Log</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Ingest Many Logs</h2>
+      <form method="post" action="/ingestMany">
+        <input type="text" id="log" name="log" placeholder="Log" required />
+        <button type="submit">Ingest Many Logs</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Search Logs</h2>
+      <form method="post" action="/extraction">
+        <input type="text" id="level" name="level" placeholder="Level" />
+        <input type="text" id="message" name="message" placeholder="Message" />
+        <input
+          type="text"
+          id="resourceId"
+          name="resourceId"
+          placeholder="Resource ID"
+        />
+        <input
+          type="text"
+          id="timestamp"
+          name="timestamp"
+          placeholder="Timestamp"
+        />
+        <input type="text" id="traceId" name="traceId" placeholder="Trace ID" />
+        <input type="text" id="spanId" name="spanId" placeholder="Span ID" />
+        <input type="text" id="commit" name="commit" placeholder="Commit" />
+        <input
+          type="text"
+          id="parentResourceId"
+          name="parentResourceId"
+          placeholder="Parent Resource ID"
+        />
+        <button type="submit">Search</button>
+      </form>
+    </section>
+
+    {% if filtered_logs %}
+    <h2>Logs From Log File</h2>
+    <div class="log-container">
+      <ul>
+        {% for log in filtered_logs %}
+        <li class="log-item">{{ log }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %} {% if filtered_logsDB %}
+    <h2>Filtered Logs From Relational DB</h2>
+    <div class="log-container">
+      <ul>
+        {% for log in filtered_logsDB %}
+        <li class="log-item">{{ log }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %} {% if filtered_logsMongo %}
+    <h2>Logs From MongoDB</h2>
+    <div class="log-container">
+      <ul>
+        {% for log in filtered_logsMongo %}
+        <li class="log-item">{{ log }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %} {% if error %}
+    <div class="error">
+      <h2>Error Occurred</h2>
+      <p>{{ error }}</p>
+    </div>
+    {% endif %}
+  </body>
+</html>
